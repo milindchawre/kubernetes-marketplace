@@ -43,6 +43,7 @@ rules:
   - replicationcontrollers
   - services
   - nodes
+  - namespaces
   - persistentvolumes
   - persistentvolumeclaims
   verbs:
@@ -150,6 +151,7 @@ spec:
         - name: app
           args:
             - '--no-probe'
+            - '--weave=false'
           env: []
           image: weaveworks/scope:1.13.1
           imagePullPolicy: IfNotPresent
@@ -191,8 +193,10 @@ spec:
             - '--probe-only'
             - '--probe.kubernetes.role=host'
             - '--probe.docker.bridge=cni0'
-            - '--probe.docker=true'
-            - '--probe.cri.endpoint=unix///var/run/k3s/containerd/containerd.sock'
+            - '--probe.docker=false'
+            - '--weave=false'
+            - '--probe.cri=true'
+            - '--probe.cri.endpoint=unix:///var/run/k3s/containerd/containerd.sock'
             - 'weave-scope-app.weave.svc.cluster.local.:80'
           image: weaveworks/scope:1.13.1
           imagePullPolicy: IfNotPresent
@@ -262,7 +266,7 @@ spec:
             - '--mode=probe'
             - '--probe-only'
             - '--probe.kubernetes.role=cluster'
-            - '--probe.cri.endpoint=unix///var/run/k3s/containerd/containerd.sock'
+            - '--weave=false'
             - 'weave-scope-app.weave.svc.cluster.local.:80'
           command:
             - /home/weave/scope
